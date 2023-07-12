@@ -3,15 +3,15 @@
 
 
 import os
+
 from import_data import *
 from clean import * 
 from analysis import *
 from review import *
+
 import progressbar
 import pandas as pd
-pd.options.mode.chained_assignment = None  # default='warn'
 import warnings
-warnings.filterwarnings("ignore")
 from docx2pdf import convert
 
 
