@@ -1,14 +1,8 @@
-import requests
 from urllib.request import urlopen
 from lxml import etree
-import re
 import pandas as pd
-import pygsheets
-import numpy as np
 import datetime
-import time
 import progressbar
-import os
 
 
 ACTUAL_DATE = datetime.datetime.now().strftime('%Y-%m-%d')
