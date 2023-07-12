@@ -16,10 +16,10 @@ from docx2pdf import convert
 
 
 
-os.chdir(r"C:/Users/ws-tmn-an-15/Desktop/Харайкин М.А/Python документы/ПРОЕКТ/")
+os.chdir(r"*/ПРОЕКТ/")
 
-GOOGLE_SHEET_ID_MAIN = '1C6g54M6uOPuuIzqeNJfzT8kDR5VDVb5BrPeCuha8L_E'
-SERVICE_FILE = 'C:\\Users\\ws-tmn-an-15\\Desktop\\Харайкин М.А\\Python документы\\python-automation-script-jupyter-notebook-266007-21fda3e2971a.json'
+GOOGLE_SHEET_ID_MAIN = '<ID>'
+SERVICE_FILE = '<SERVICE_FILE_LOCATION>'
 
 YEAR = 2023
 MONTH = 6
@@ -98,8 +98,7 @@ DF_SOLD_CLEANED = clean('SOLD', DF_SOLD, DF_WALLS, DF_DISTRICTS, CITIES_LIST)
 print('Получение карты городов, по которым нужно делать обзоры...')
 DF_RESTR_MAP = get_cities_restriction_map(DF_SALE_CLEANED, DF_SOLD_CLEANED, MIN_OBJ_SALE_CNT, MIN_OBJ_SOLD_CNT, CITIES_LIST)
 
-# CITIES_LIST_FINAL = list(DF_RESTR_MAP[DF_RESTR_MAP['need_review'] == 1]['city'][:])
-CITIES_LIST_FINAL = ["Тюмень", "Тобольск", "Сургут"]
+CITIES_LIST_FINAL = list(DF_RESTR_MAP[DF_RESTR_MAP['need_review'] == 1]['city'][:])
 CITY_IMAGES = os.listdir(os.path.join(os.getcwd(), "Обложки"))
 DF_CITY_IMAGES = pd.DataFrame({'city': [i[:-4] for i in CITY_IMAGES], 'image_dir': [os.path.join(os.getcwd(), "Обложки") + '\\' + i for i in CITY_IMAGES]})
 print(f'Формирование обзоров...')
@@ -804,9 +803,9 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
         
         bar.update(CITIES_LIST_FINAL.index(city))
         
-# for review in [i for i in os.listdir(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}')) if '.docx' in i]:
-#     convert(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review), 
-#     os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review[:-4]) + 'pdf')
-#     os.remove(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review))        
+for review in [i for i in os.listdir(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}')) if '.docx' in i]:
+    convert(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review), 
+    os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review[:-4]) + 'pdf')
+    os.remove(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review))        
 
 print('Готово!')
