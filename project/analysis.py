@@ -22,11 +22,22 @@ warnings.filterwarnings( "ignore", module = "matplotlib\..*" )
 from import_data import *
 
 
+
+
+"""
+Получение шрифтов для текста обзора
+"""
+
 font_path  = r'*\Элементы дизайна\1_Circe\1_Circe\Circe Regular.ttf'
 font_manager.fontManager.addfont(font_path)
 prop = font_manager.FontProperties(fname=font_path)
 plt.rcParams['font.family'] = 'Circe'
 plt.rcParams['font.family'] = prop.get_name()
+
+
+"""
+Функции для разметки графиков
+"""
 
 def remove_borders(ax):
     ax.spines['top'].set_visible(False)
@@ -35,7 +46,6 @@ def remove_borders(ax):
     ax.spines['left'].set_visible(False)
 
 def autolabel_vertical(rects, ax):
-    # attach some text labels
     for rect in rects:
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width()/2., height,
@@ -49,8 +59,11 @@ def autolabel_vertical_float(rects, ax):
         ax.text(rect.get_x() + rect.get_width()/2,
                 height if height >=0 else 0, 
                 height, fontsize=10, ha='center', va='bottom')
-        
-        
+
+
+"""
+Описание логики анализа данных по городу
+"""        
 class City_analysis:
     
     def __init__(self, gc, city, df_sale_cleaned, df_sold_cleaned, COLORS, START, MONTH, YEAR):
@@ -63,14 +76,21 @@ class City_analysis:
         self.MONTH = MONTH
         self.YEAR = YEAR
 
-
+    """
+    Получение данных по активным объектам на рынке за месяц
+    """
     def get_df_sale_city(self, city):
         return self.df_sale_cleaned[self.df_sale_cleaned['city'] == city]
 
+    """
+    Получение данных по проданным объектам на рынке за месяц
+    """
     def get_df_sold_city(self, city):
         return self.df_sold_cleaned[self.df_sold_cleaned['city'] == city]
     
-    
+    """
+    Получение объема предложения за месяц обзора, предыдущий месяц и за месяц в прошлом году
+    """    
     def get_supply_cnt_city_info(self, city):
         df_sale_supply_cnt = pd.pivot_table(self.get_df_sale_city(city), values = ['id'], index = ['city', 'date'], aggfunc = {'id': 'count'}).reset_index()
         
@@ -106,7 +126,9 @@ class City_analysis:
                 'df_sale_supply_cnt': df_sale_supply_cnt,
                 'df_sale_supply_cnt1': df_sale_supply_cnt1}
     
-    
+    """
+    Получение объема предложения в разрезе комнатности, построение графика
+    """    
     def get_supply_cnt_by_room_city_info(self, city):
         df_sale_supply_cnt_by_room = pd.pivot_table(self.get_df_sale_city(city), values = ['id'], index = ['city', 'date', 'rooms_cnt_new'], aggfunc = {'id': 'count'}).reset_index()
         df_sale_supply_cnt_by_room['%'] = df_sale_supply_cnt_by_room['id'] / df_sale_supply_cnt_by_room.groupby(['city', 'date']).transform('sum')['id'] # Объем предложения в городе в разрезе комнатности
@@ -152,7 +174,9 @@ class City_analysis:
                 'df_sale_supply_cnt_by_room1': df_sale_supply_cnt_by_room1,
                 'df_sale_supply_cnt_by_room2': df_sale_supply_cnt_by_room2}
     
-    
+    """
+    Получение объема предложения в разрезе районов города, построение графика
+    """    
     def get_supply_cnt_by_district_city_info(self, city):
         df_sale_supply_cnt_by_district = pd.pivot_table(self.get_df_sale_city(city), values = ['id'], index = ['city', 'date', 'district_new'], aggfunc = 'count').reset_index()
         df_sale_supply_cnt_by_district['%'] = (100 * df_sale_supply_cnt_by_district['id'] / df_sale_supply_cnt_by_district.groupby(['city', 'date']).transform('sum')['id']).astype('float')
@@ -208,7 +232,9 @@ class City_analysis:
                 'df_sale_supply_cnt_by_district1': df_sale_supply_cnt_by_district1,
                 'df_sale_supply_cnt_by_district2': df_sale_supply_cnt_by_district2}
     
-    
+    """
+    Получение цены продаж в городе за месяц обзора, предыдущий месяц и за месяц в прошлом году, построение графика
+    """    
     def get_sale_mean_price_info(self, city):
         df_sale_mean_price_m2 = pd.pivot_table(self.get_df_sale_city(city), values = ['price', 'area_total'], index = ['city', 'date'], aggfunc = 'sum').reset_index()
         df_sale_mean_price_m2['price_m2'] = df_sale_mean_price_m2['price'] / df_sale_mean_price_m2['area_total']
