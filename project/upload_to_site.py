@@ -38,6 +38,10 @@ YEAR = str(YEAR)
 REVIEW_FOLDER_PATH = os.path.join("*\\Обзоры", YEAR, MONTH + '. ' + review_date.strftime("%B"))
 COVER_FOLDER_PATH = os.path.join("*\\Обложки", YEAR, MONTH + '. ' + review_date.strftime("%B"))
 
+
+"""
+Генерация обложек обзоров из их первых страниц
+"""
 def generate_covers(REVIEW_FOLDER_PATH, COVER_FOLDER_PATH):
     os.chdir(REVIEW_FOLDER_PATH)
     if not os.path.exists(COVER_FOLDER_PATH):
@@ -57,6 +61,9 @@ def generate_covers(REVIEW_FOLDER_PATH, COVER_FOLDER_PATH):
                     os.remove(COVER_FOLDER_PATH + '\\' + review.split(' - ')[0] + '.pdf')
             bar.update(os.listdir().index(review))
 
+"""
+Выгрузка обзоров на сайт
+"""
 def upload_reviews(url, REVIEW_FOLDER_PATH, COVER_FOLDER_PATH):
     try:
         with open(r'*\connection str RIES.txt', 'r') as f:
@@ -81,7 +88,7 @@ def upload_reviews(url, REVIEW_FOLDER_PATH, COVER_FOLDER_PATH):
     submit_auth_btn = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, """//*[@id="input-form"]/div[2]/button[1]"""))).click()
     sorted_reviews = sorted(os.listdir(), reverse = True)
     with progressbar.ProgressBar(max_value = len(sorted_reviews)) as bar:
-        for review in sorted_reviews[:]:
+        for review in sorted_reviews[]:
             if review not in list(df_site_reviews['filename']):
                 new_review_btn = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, """//*[@id="content"]/a/span"""))).click()
                 review_name = WebDriverWait(browser, 20).until(EC.presence_of_element_located((By.XPATH, """//*[@id="pdf_form"]/label[1]/input"""))).send_keys(review)
