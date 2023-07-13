@@ -141,7 +141,7 @@ class City_analysis:
         fig2, ax2 = plt.subplots(figsize=(7, 7), subplot_kw=dict(aspect="equal"))
         fig2.set_facecolor('white')
         
-        img = plt.imread(r'C:\Users\ws-tmn-an-15\Desktop\Харайкин М.А\Python документы\ПРОЕКТ\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
+        img = plt.imread(r'*\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
         imagebox = OffsetImage(img, zoom=0.08, alpha = 0.2)
         imagebox.image.axes = ax2
         ab = AnnotationBbox(imagebox, (0.5, 0.5), xycoords='axes fraction', frameon=False, bboxprops={'lw':0}, zorder=0)
@@ -199,7 +199,7 @@ class City_analysis:
         fig3.set_facecolor('white')
         title_height = (-1.4) / (graph1_2_height)
                 
-        img = plt.imread(r'C:\Users\ws-tmn-an-15\Desktop\Харайкин М.А\Python документы\ПРОЕКТ\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
+        img = plt.imread(r'*\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
         imagebox = OffsetImage(img, zoom=0.2, alpha = 0.2)
         imagebox.image.axes = ax3
         ab = AnnotationBbox(imagebox, (0.5, 0.5), xycoords='axes fraction', frameon=False, bboxprops={'lw':0}, zorder=0)
@@ -233,7 +233,7 @@ class City_analysis:
                 'df_sale_supply_cnt_by_district2': df_sale_supply_cnt_by_district2}
     
     """
-    Получение цены продаж в городе за месяц обзора, предыдущий месяц и за месяц в прошлом году, построение графика
+    Получение удельной цены предложения в городе за месяц обзора, предыдущий месяц и за месяц в прошлом году, построение графика
     """    
     def get_sale_mean_price_info(self, city):
         df_sale_mean_price_m2 = pd.pivot_table(self.get_df_sale_city(city), values = ['price', 'area_total'], index = ['city', 'date'], aggfunc = 'sum').reset_index()
@@ -271,9 +271,11 @@ class City_analysis:
                 'df_sale_mean_price_m2_year_ago': df_sale_mean_price_m2_year_ago,
                 'df_sale_mean_price_m2_1': df_sale_mean_price_m2_1}
 
-    
+    """
+    Получение удельной цены предложения в городе за последний год помесячно, построение графика
+    """    
     def get_sale_mean_price_dynamic(self, city, gc):
-        sh_mean_price_m2 = gc.open_by_key('10Uc3MKpDUc2RKTUjeUZTgFj-99eupTPv9M0ItUPOVis') # https://docs.google.com/spreadsheets/d/10Uc3MKpDUc2RKTUjeUZTgFj-99eupTPv9M0ItUPOVis/edit#gid=70400144
+        sh_mean_price_m2 = gc.open_by_key('<google_sheet_id>') 
         wks_mean_price_m2 = sh_mean_price_m2.worksheet_by_title("Данные")
         DF_SALE_MEAN_PRICE_M2 = wks_mean_price_m2.get_as_df(start = 'a1')
         DF_SALE_MEAN_PRICE_M2_1 = DF_SALE_MEAN_PRICE_M2[(DF_SALE_MEAN_PRICE_M2['city'] == city) &
@@ -291,7 +293,7 @@ class City_analysis:
             fig7, ax7 = plt.subplots(figsize = (14, 8))
             fig7.set_facecolor('white')
             
-            img = plt.imread(r'C:\Users\ws-tmn-an-15\Desktop\Харайкин М.А\Python документы\ПРОЕКТ\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
+            img = plt.imread(r'*\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
             imagebox = OffsetImage(img, zoom=0.2, alpha = 0.2)
             imagebox.image.axes = ax7
             ab = AnnotationBbox(imagebox, (0.5, 0.5), xycoords='axes fraction', frameon=False, bboxprops={'lw':0}, zorder=0)
@@ -343,10 +345,11 @@ class City_analysis:
             plt.savefig(fr'{os.getcwd()}/Графики/{city}/GRAPH2_1.png', bbox_inches='tight')
             plt.close()
             
-        return {'DF_SALE_MEAN_PRICE_M2_1': DF_SALE_MEAN_PRICE_M2_1,
-                }
+        return {'DF_SALE_MEAN_PRICE_M2_1': DF_SALE_MEAN_PRICE_M2_1}
 
-    
+    """
+    Получение удельной цены предложения в городе в разрезе комнатности, построение графика
+    """    
     def get_sale_mean_price_by_room_info(self, city, sale_mean_price_first_graph_num):
         df_sale_mean_price_m2_by_room = pd.pivot_table(self.get_df_sale_city(city), values = ['price', 'area_total'], index = ['city', 'date', 'rooms_cnt_new'], aggfunc = 'sum').reset_index()
         df_sale_mean_price_m2_by_room['price_m2'] = df_sale_mean_price_m2_by_room['price'] / df_sale_mean_price_m2_by_room['area_total']
@@ -361,7 +364,7 @@ class City_analysis:
         fig5, ax5 = plt.subplots(figsize=(9,5))
         fig5.set_facecolor('white')
 
-        img = plt.imread(r'C:\Users\ws-tmn-an-15\Desktop\Харайкин М.А\Python документы\ПРОЕКТ\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
+        img = plt.imread(r'*\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
         imagebox = OffsetImage(img, zoom=0.15, alpha = 0.2)
         imagebox.image.axes = ax5
         ab = AnnotationBbox(imagebox, (0.5, 0.5), xycoords='axes fraction', frameon=False, bboxprops={'lw':0}, zorder=0)
@@ -399,7 +402,9 @@ class City_analysis:
                 'df_sale_mean_price_m2_by_room1': df_sale_mean_price_m2_by_room1,
                 'df_sale_mean_price_m2_by_room2': df_sale_mean_price_m2_by_room2}
     
-    
+    """
+    Получение удельной цены предложения в городе в разрезе районов города, построение графика
+    """   
     def get_sale_mean_price_by_district_info(self, city, sale_mean_price_first_graph_num):
         df_sale_mean_price_m2_by_district = pd.pivot_table(self.get_df_sale_city(city), values = ['id', 'price', 'area_total'], index = ['city', 'date', 'district_new'], aggfunc ={'id': 'count', 'price': 'sum', 'area_total': 'sum'}).reset_index()
         df_sale_mean_price_m2_by_district['price_m2'] = df_sale_mean_price_m2_by_district['price'] / df_sale_mean_price_m2_by_district['area_total']
@@ -421,7 +426,7 @@ class City_analysis:
         title_height = (-1.4) / (graph2_3_height)
         fig6.set_facecolor('white')
 
-        img = plt.imread(r'C:\Users\ws-tmn-an-15\Desktop\Харайкин М.А\Python документы\ПРОЕКТ\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
+        img = plt.imread(r'*\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
         imagebox = OffsetImage(img, zoom=0.2, alpha = 0.2)
         imagebox.image.axes = ax6
         ab = AnnotationBbox(imagebox, (0.5, 0.5), xycoords='axes fraction', frameon=False, bboxprops={'lw':0}, zorder=0)
@@ -453,7 +458,9 @@ class City_analysis:
         return {'df_sale_mean_price_m2_by_district': df_sale_mean_price_m2_by_district,
                 'df_sale_mean_price_m2_by_district1': df_sale_mean_price_m2_by_district1}
 
-
+    """
+    Получение удельной цены продаж в городе
+    """   
     def get_sold_mean(self, city):
         df_sold_mean_values = pd.pivot_table(self.get_df_sold_city(city), values = ['price_m2', 'area_total', 'price'], index = ['city', 'date'], aggfunc = {'area_total': ('mean', 'sum'), 'price': ('mean', 'sum')}).reset_index()
         df_sold_mean_values['price_m2'] = df_sold_mean_values['price', 'sum'] / df_sold_mean_values['area_total', 'sum']
@@ -462,19 +469,20 @@ class City_analysis:
         return {'df_sold_mean_values': df_sold_mean_values,
                 'df_sold_mean_price_m2_current': df_sold_mean_price_m2_current}
         
-        
+    """
+    Получение удельной цены продаж в городе в разрезе комнатности, построение графика
+    """       
     def get_sold_supply_cnt_by_room(self, city):
         df_sold_supply_cnt_by_room = pd.pivot_table(self.get_df_sold_city(city), values = ['id'], index = ['city', 'date', 'rooms_cnt_new'], aggfunc = 'count').reset_index()
         df_sold_supply_cnt_by_room = df_sold_supply_cnt_by_room[(df_sold_supply_cnt_by_room['date'].dt.month == self.MONTH) & (df_sold_supply_cnt_by_room['date'].dt.year == self.YEAR)]
         df_sold_supply_cnt_by_room['%'] = (df_sold_supply_cnt_by_room['id'] / df_sold_supply_cnt_by_room['id'].sum() * 100).round(2)
-        # df_sold_supply_cnt_by_room['%'] = df_sold_supply_cnt_by_room['id'] / df_sold_supply_cnt_by_room.groupby(['city', 'date']).transform('sum')['id']
         df_sold_supply_cnt_by_room['date'] = df_sold_supply_cnt_by_room['date'].dt.strftime('%Y-%m')
         df_sold_supply_cnt_by_room = df_sold_supply_cnt_by_room.set_index('date').sort_values(by = ['%'], ascending = False)
         
         fig9, ax9 = plt.subplots(figsize=(7, 7), subplot_kw=dict(aspect="equal"))
         fig9.set_facecolor('white')
 
-        img = plt.imread(r'C:\Users\ws-tmn-an-15\Desktop\Харайкин М.А\Python документы\ПРОЕКТ\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
+        img = plt.imread(r'*\Элементы дизайна\1_Логотипы\1_Логотипы\png\logo.png', format='png')
         imagebox = OffsetImage(img, zoom=0.08, alpha = 0.2)
         imagebox.image.axes = ax9
         ab = AnnotationBbox(imagebox, (0.5, 0.5), xycoords='axes fraction', frameon=False, bboxprops={'lw':0}, zorder=0)
