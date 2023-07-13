@@ -47,7 +47,9 @@ data = Import_data(SERVICE_FILE, GOOGLE_SHEET_ID_MAIN, CURRENT_DATE, PREVIOUS_MO
 
 
 
-"""Импорт данных"""
+"""
+Импорт данных
+"""
 
 print('Авторизация...')
 gc = data.auth
@@ -83,8 +85,9 @@ DF_UNDEF_WALLS = undef_walls(DF_SALE, DF_WALLS)
 
 
 
-
-"""Очистка данных"""
+"""
+Очистка данных
+"""
 
 print('Очистка данных по предложению...')
 DF_SALE_CLEANED = clean('SALE', DF_SALE, DF_WALLS, DF_DISTRICTS, CITIES_LIST)
@@ -93,7 +96,10 @@ print('Очистка данных по продажам...')
 DF_SOLD_CLEANED = clean('SOLD', DF_SOLD, DF_WALLS, DF_DISTRICTS, CITIES_LIST)
 
 
-"""Анализ"""
+
+"""
+Анализ
+"""
 
 print('Получение карты городов, по которым нужно делать обзоры...')
 DF_RESTR_MAP = get_cities_restriction_map(DF_SALE_CLEANED, DF_SOLD_CLEANED, MIN_OBJ_SALE_CNT, MIN_OBJ_SOLD_CNT, CITIES_LIST)
@@ -101,7 +107,12 @@ DF_RESTR_MAP = get_cities_restriction_map(DF_SALE_CLEANED, DF_SOLD_CLEANED, MIN_
 CITIES_LIST_FINAL = list(DF_RESTR_MAP[DF_RESTR_MAP['need_review'] == 1]['city'][:])
 CITY_IMAGES = os.listdir(os.path.join(os.getcwd(), "Обложки"))
 DF_CITY_IMAGES = pd.DataFrame({'city': [i[:-4] for i in CITY_IMAGES], 'image_dir': [os.path.join(os.getcwd(), "Обложки") + '\\' + i for i in CITY_IMAGES]})
-print(f'Формирование обзоров...')
+
+
+"""
+Формирование обзоров 
+"""
+
 with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
     for city in CITIES_LIST_FINAL:
         data_review = City_analysis(city, gc, DF_SALE_CLEANED, DF_SOLD_CLEANED, COLORS, START, MONTH, YEAR)
@@ -120,7 +131,8 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
             df_sold_city = data_review.get_df_sold_city(city)
             sold_mean = data_review.get_sold_mean(city)
             sold_supply_cnt_by_room = data_review.get_sold_supply_cnt_by_room(city)    
-        
+
+        # Параметры документа
         document = Document()
     
         style = document.styles['Normal']
@@ -135,19 +147,13 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
         first_section.bottom_margin = Cm(1.27)
         first_section.left_margin = Cm(0)
         first_section.right_margin = Cm(0)
-        
-        
             
         def apply_paragraph_formatting(paragraph):
             paragraph.paragraph_format.first_line_indent = Cm(1.25)
             paragraph.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        
-        #
-        # Логотип
-        #
-#         picture = document.add_picture(os.path.join(os.getcwd(), "Элементы дизайна", '1_Логотипы', '1_Логотипы', 'png', 'Лого в плашке + охранное поле.png'), width=Inches(2))
-#         last_paragraph2 = document.paragraphs[-1] 
-#         last_paragraph2.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+
+        # Подготовка самого документа
+    
         #
         #
         #    
@@ -174,7 +180,7 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
         #
         #
         #
-        # Заголовок
+        # 0. Заголовок
         #
         #
         # 
@@ -338,21 +344,10 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
             
         #
         #
+        # 1. Анализ предложения
         #
         #
-        #
-        #
-        #
-        #
-        # Анализ предложения
-        #
-        #
-        #
-        #
-        #
-        #
-        #
-        #
+        
         document.add_section()
         
         head_1 = document.add_heading(level = 1)
@@ -439,23 +434,15 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
             document.add_picture(fr'{os.getcwd()}/Графики/{city}/GRAPH1_2.png', width=Inches(graph_1_2_width))
             last_paragraph2 = document.paragraphs[-1] 
             last_paragraph2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
         #
         #
         #
+        # 2. Анализ ценовой ситуации
         #
         #
         #
-        #
-        #
-        # Анализ ценовой ситуации
-        #
-        #
-        #
-        #
-        #
-        #
-        #
-        #
+
         document.add_section()
     
         head_2 = document.add_heading(level = 1)
@@ -644,23 +631,15 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
             document.add_picture(fr'{os.getcwd()}/Графики/{city}/GRAPH2_3.png', width=Inches(graph_2_3_width))
             last_paragraph2 = document.paragraphs[-1] 
             last_paragraph2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
         #
         #
         #
+        # 3. Анализ продаж
         #
         #
         #
-        #
-        #
-        # Анализ продаж
-        #
-        #
-        #
-        #
-        #
-        #
-        #
-        #
+
         if DF_RESTR_MAP[DF_RESTR_MAP['city'] == city]['need_sold_review'].item() == 1:
             #
             #
@@ -787,7 +766,11 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
             section.bottom_margin = Cm(1.27)
             section.left_margin = Cm(1.27)
             section.right_margin = Cm(1.5)
-        
+
+        #
+        # Последний форзац
+        #
+
         new_section = document.add_section()
         new_section.left_margin = Cm(0.0)
         new_section.right_margin = Cm(0.0)
@@ -798,11 +781,13 @@ with progressbar.ProgressBar(max_value = len(CITIES_LIST_FINAL)) as bar:
         except FileExistsError:
             pass
         document.add_picture(fr'{os.getcwd()}/Обзоры/Обложка.png', width=Inches(8.5), height = Inches(11))
-        
+
+        # Сохранение документа
         document.save(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', f'{city} - обзор вторичного рынка за {START.strftime("%B %Y").lower()}.docx'))
         
         bar.update(CITIES_LIST_FINAL.index(city))
-        
+
+# Конвертация файлов с обзорами из .docx в .pdf
 for review in [i for i in os.listdir(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}')) if '.docx' in i]:
     convert(os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review), 
     os.path.join(os.getcwd(), "Обзоры", START.strftime("%Y"), f'{START.strftime("%m")}. {START.strftime("%B")}', review[:-4]) + 'pdf')
